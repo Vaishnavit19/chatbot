@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relationship Travel Style Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: #0a0a0a;
+        }
+
+        /* Animated gradient background */
+        .gradient-bg {
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: linear-gradient(60deg, #FF006E, #8338EC, #3A86FF, #06FFB4, #FFB700, #FF006E);
+            background-size: 300% 300%;
+            animation: gradient-shift 15s ease infinite;
+            opacity: 0.15;
+            z-index: -2;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { transform: rotate(0deg) scale(1.5); }
+            25% { transform: rotate(90deg) scale(1.5); }
+            50% { transform: rotate(180deg) scale(1.5); }
+            75% { transform: rotate(270deg) scale(1.5); }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: float-up 10s linear infinite;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main container */
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
+                        inset 0 0 20px rgba(255, 255, 255, 0.05);
+            max-width: 850px;
+            width: 100%;
+            padding: 50px;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #FF006E, #8338EC, #3A86FF, #06FFB4, #FFB700);
+            border-radius: 30px;
+            opacity: 0.5;
+            z-index: -1;
+            animation: border-glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes border-glow {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .travel-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, #FF006E 0%, #8338EC 50%, #3A86FF 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            animation: pulse-glow 2s ease-in-out infinite;
+            box-shadow: 0 0 50px rgba(131, 56, 236, 0.6);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 30px rgba(131, 56, 236, 0.6);
+            }
+            50% { 
+                transform: scale(1.1);
+                box-shadow: 0 0 60px rgba(131, 56, 236, 0.8);
+            }
+        }
+
+        h1 {
+            font-size: 3em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #FF006E 0%, #8338EC 25%, #3A86FF 50%, #06FFB4 75%, #FFB700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: text-shimmer 3s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(131, 56, 236, 0.5);
+        }
+
+        @keyframes text-shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2em;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Progress section */
+        .progress-section {
+            margin-bottom: 40px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF006E 0%, #8338EC 25%, #3A86FF 50%, #06FFB4 75%, #FFB700 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progress-shine 2s linear infinite;
+        }
+
+        @keyframes progress-shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        /* Scenario card */
+        .scenario-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            display: none;
+            animation: fadeInScale 0.5s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .scenario-card.active {
+            display: block;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .scenario-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF006E 0%, #8338EC 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(131, 56, 236, 0.4);
+        }
+
+        .scenario-text {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.3em;
+            line-height: 1.7;
+            margin-bottom: 35px;
+            font-weight: 300;
+        }
+
+        /* Options */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .option-button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .option-button:hover {
+            border-color: #8338EC;
+            background: rgba(131, 56, 236, 0.1);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(131, 56, 236, 0.3);
+        }
+
+        .option-button:hover::before {
+            left: 100%;
+        }
+
+        .option-button.selected {
+            border-color: #06FFB4;
+            background: rgba(6, 255, 180, 0.15);
+            box-shadow: 0 0 30px rgba(6, 255, 180, 0.4),
+                        inset 0 0 20px rgba(6, 255, 180, 0.1);
+        }
+
+        .option-letter {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #FF006E 0%, #8338EC 100%);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 700;
+            color: white;
+            margin-right: 20px;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+        }
+
+        .option-button:hover .option-letter {
+            transform: rotate(360deg) scale(1.1);
+            background: linear-gradient(135deg, #8338EC 0%, #3A86FF 100%);
+        }
+
+        .option-button.selected .option-letter {
+            background: linear-gradient(135deg, #06FFB4 0%, #3A86FF 100%);
+        }
+
+        .option-text {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            font-size: 1.05em;
+        }
+
+        /* Navigation buttons */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .nav-button {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .next-button {
+            background: linear-gradient(135deg, #FF006E 0%, #8338EC 50%, #3A86FF 100%);
+            color: white;
+            flex-grow: 1;
+            box-shadow: 0 5px 20px rgba(131, 56, 236, 0.4);
+        }
+
+        .next-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .next-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(131, 56, 236, 0.6);
+        }
+
+        .next-button:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .next-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Start section */
+        .start-section {
+            text-align: center;
+        }
+
+        .user-info {
+            margin: 40px 0;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #8338EC;
+            background: rgba(131, 56, 236, 0.1);
+            box-shadow: 0 0 20px rgba(131, 56, 236, 0.3);
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #FF006E 0%, #8338EC 50%, #3A86FF 100%);
+            color: white;
+            padding: 20px 60px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(131, 56, 236, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .start-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .start-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(131, 56, 236, 0.6);
+        }
+
+        .start-button:hover::before {
+            left: 100%;
+        }
+
+        /* Results section */
+        .results-section {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 40px;
+            background: linear-gradient(135deg, #FF006E 0%, #8338EC 50%, #3A86FF 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            animation: celebrate 1s ease;
+            box-shadow: 0 0 60px rgba(131, 56, 236, 0.6);
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(0) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
+        }
+
+        .results-title {
+            font-size: 2.5em;
+            color: white;
+            margin-bottom: 30px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FF006E 0%, #8338EC 25%, #3A86FF 50%, #06FFB4 75%, #FFB700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .score-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .score-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .score-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .score-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .score-card:hover::before {
+            opacity: 1;
+        }
+
+        .score-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .score-value {
+            font-size: 3em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FF006E 0%, #8338EC 50%, #3A86FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .score-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF006E 0%, #8338EC 50%, #3A86FF 100%);
+            transition: width 1s ease;
+            position: relative;
+        }
+
+        .score-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: bar-shine 2s linear infinite;
+        }
+
+        @keyframes bar-shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .archetype-result {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .archetype-result::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #FF006E, #8338EC, #3A86FF, #06FFB4);
+            border-radius: 20px;
+            opacity: 0.3;
+            z-index: -1;
+            animation: archetype-glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes archetype-glow {
+            0% { opacity: 0.2; }
+            100% { opacity: 0.5; }
+        }
+
+        .archetype-name {
+            font-size: 2em;
+            color: white;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .archetype-description {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 2.2em;
+            }
+
+            .scenario-text {
+                font-size: 1.1em;
+            }
+
+            .option-button {
+                padding: 20px;
+            }
+
+            .score-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Floating emojis */
+        .floating-emoji {
+            position: absolute;
+            font-size: 30px;
+            animation: float-around 20s infinite linear;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        @keyframes float-around {
+            0% {
+                transform: translate(0, 100vh) rotate(0deg);
+            }
+            100% {
+                transform: translate(100vw, -100vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-bg"></div>
+    <div class="particles" id="particles"></div>
+    
+    <!-- Floating emojis -->
+    <div class="floating-emoji" style="left: 10%; animation-delay: 0s;">✈️</div>
+    <div class="floating-emoji" style="left: 30%; animation-delay: 3s;">💕</div>
+    <div class="floating-emoji" style="left: 50%; animation-delay: 6s;">🗺️</div>
+    <div class="floating-emoji" style="left: 70%; animation-delay: 9s;">🎒</div>
+    <div class="floating-emoji" style="left: 90%; animation-delay: 12s;">🌎</div>
+
+    <div class="main-container">
+        <div class="quiz-container">
+            <div class="header">
+                <div class="travel-icon">✈️</div>
+                <h1>Relationship Travel Style Assessment</h1>
+                <p class="subtitle">Discover your relationship dynamics through travel scenarios</p>
+            </div>
+
+            <!-- Start Section -->
+            <div class="start-section" id="startSection">
+                <div class="user-info">
+                    <div class="form-group">
+                        <label for="userName">Your Name</label>
+                        <input type="text" id="userName" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email (Optional)</label>
+                        <input type="email" id="userEmail" placeholder="your@email.com">
+                    </div>
+                </div>
+                <button class="start-button" onclick="startQuiz()">Start Your Journey</button>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="progress-section" id="progressSection" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="currentQuestion">1</span> of <span id="totalQuestions">7</span> scenarios
+                </div>
+            </div>
+
+            <!-- Scenario Container -->
+            <div id="scenarioContainer"></div>
+
+            <!-- Navigation -->
+            <div class="navigation-buttons" id="navigationButtons" style="display: none;">
+                <button class="nav-button back-button" onclick="previousQuestion()" id="backButton">Back</button>
+                <button class="nav-button next-button" onclick="nextQuestion()" id="nextButton" disabled>Continue →</button>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <div class="results-icon">🎉</div>
+                <h2 class="results-title">Your Travel Relationship Style</h2>
+                
+                <div class="score-cards">
+                    <div class="score-card">
+                        <div class="score-label">Emotional Connection</div>
+                        <div class="score-value" id="emotionalScore">0</div>
+                        <div class="score-bar">
+                            <div class="score-fill" id="emotionalBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="score-card">
+                        <div class="score-label">Logical Planning</div>
+                        <div class="score-value" id="logicalScore">0</div>
+                        <div class="score-bar">
+                            <div class="score-fill" id="logicalBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="score-card">
+                        <div class="score-label">Adventurous Spirit</div>
+                        <div class="score-value" id="exploratoryScore">0</div>
+                        <div class="score-bar">
+                            <div class="score-fill" id="exploratoryBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="archetype-result">
+                    <h3 class="archetype-name" id="archetypeName">Your Archetype</h3>
+                    <p class="archetype-description" id="archetypeDescription">
+                        Based on your responses, you show a unique blend of emotional awareness, logical thinking, and adventurous spirit in your relationship.
+                    </p>
+                </div>
+
+                <button class="start-button" onclick="location.reload()">Take Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // Quiz data structure
+        const scenarios = [
+            {
+                id: 1,
+                text: "First you need to decide on your travel itinerary. How many days do you want your trip to be?",
+                options: [
+                    {
+                        letter: "A",
+                        text: "Let's pick whatever number of days makes us both feel relaxed and connected.",
+                        scores: { emotional: 2, logical: 0, exploratory: 0 },
+                        next: 2
+                    },
+                    {
+                        letter: "B",
+                        text: "I'll run the costs and schedules to choose the most efficient trip length.",
+                        scores: { emotional: 0, logical: 2, exploratory: 0 },
+                        next: 2
+                    },
+                    {
+                        letter: "C",
+                        text: "Let's go as long as our schedules allow—more days means more chances for spontaneous adventures.",
+                        scores: { emotional: 0, logical: 0, exploratory: 2 },
+                        next: 2
+                    }
+                ]
+            },
+            {
+                id: 2,
+                text: "Now you need to decide on where to go. You have always wanted to visit Paris but your partner thinks London would be more fun.",
+                options: [
+                    {
+                        letter: "A",
+                        text: "If London makes you happier, I'm good with it.",
+                        scores: { emotional: 2, logical: 0, exploratory: 0 },
+                        next: 3.1
+                    },
+                    {
+                        letter: "B",
+                        text: "Cost, flights, and attractions favor Paris—let's choose that.",
+                        scores: { emotional: 0, logical: 2, exploratory: 0 },
+                        next: 3.2
+                    },
+                    {
+                        letter: "C",
+                        text: "London vibe calls to me—let's chase that spontaneity.",
+                        scores: { emotional: 0, logical: 0, exploratory: 2 },
+                        next: 3.1
+                    }
+                ]
+            },
+            {
+                id: 3.1,
+                text: "You guys are going to London!! You are excited, but the night before the flight your partner told you work came up and they had to stay behind for another day.",
+                options: [
+                    {
+                        letter: "A",
+                        text: "I'll cancel and rebook so we arrive together. I don't want to be in a new place alone.",
+                        scores: { emotional: 2, logical: 0, exploratory: 0 },
+                        next: 4.1
+                    },
+                    {
+                        letter: "B",
+                        text: "I'll compare rebooking fees; if it's too high, I'll go ahead today, check in, and you can join me tomorrow.",
+                        scores: { emotional: 0, logical: 2, exploratory: 0 },
+                        next: 4.2
+                    },
+                    {
+                        letter: "C",
+                        text: "This is actually great—more time to plan my day. I'll go today solo and explore until you arrive tomorrow.",
+                        scores: { emotional: 0, logical: 0, exploratory: 2 },
+                        next: 4.2
+                    }
+                ]
+            },
+            {
+                id: 3.2,
+                text: "You guys are going to Paris!! You are excited, but the night before the flight your partner told you work came up and they had to stay behind for another day.",
+                options: [
+                    {
+                        letter: "A",
+                        text: "I'll cancel and rebook so we arrive together. I don't want to be in a new place alone.",
+                        scores: { emotional: 2, logical: 0, exploratory: 0 },
+                        next: 4.1
+                    },
+                    {
+                        letter: "B",
+                        text: "I'll compare rebooking fees; if it's too high, I'll go ahead today, check in, and you can join me tomorrow.",
+                        scores: { emotional: 0, logical: 2, exploratory: 0 },
+                        next: 4.2
+                    },
+                    {
+                        letter: "C",
+                        text: "This is actually great—more time to plan my day. I'll go today solo and explore until you arrive tomorrow.",
+                        scores: { emotional: 0, logical: 0, exploratory: 2 },
+                        next: 4.2
+                    }
+                ]
+            },
+            {
+                id: 4.1,
+                text: "You canceled your flight and booked a hotel near the airport. It's late evening and your partner still hasn't replied to any texts all day.",
+                options: [
+                    {
+                        letter: "A",
+                        text: "You pick up your phone again and text: 'Please let me know you're okay—I'm really worried.'",
+                        scores: { emotional: 2, logical: 0, exploratory: 0 },
+                        next: 5
+                    },
+                    {
+                        letter: "B",
+                        text: "They're probably still tied up with work. I'll confirm that everything on my end is in order and avoid reaching out until necessary.",
+                        scores: { emotional: 0, logical: 2, exploratory: 0 },
+                        next: 5
+                    },
+                    {
+                        letter: "C",
+                        text: "You decide to leave the hotel for a bit—grab coffee at a nearby café and take photos of the city at night until they respond.",
+                        scores: { emotional: 0, logical: 0, exploratory: 2 },
+                        next: 5
+                    }
+                ]
+            },
+            {
+                id: 4.2,
+                text: "You decided to fly in first and now you're alone in the city with a free day—your partner's flight was delayed, and now you need to decide how to spend your time.",
+                options: [
+                    {
+                        letter: "A",
+                        text: "I'll go spend time in that beautiful café we always wanted to visit—and send you a photo so you feel part of it.",
+                        scores: { emotional: 2, logical: 0, exploratory: 0 },
+                        next: 5
+                    },
+                    {
+                        letter: "B",
+                        text: "Let's stick to the plan and take that tour since I'm already here—no need to reinvent the day.",
+                        scores: { emotional: 0, logical: 2, exploratory: 0 },
+                        next: 5
+                    },
+                    {
+                        letter: "C",
+                        text: "I'll walk around to see if there's anything interesting or pretty in this neighborhood.",
+                        scores: { emotional: 0, logical: 0, exploratory: 2 },
+                        next: 5
+                    }
+                ]
+            },
+            {
+                id: 5,
+                text: "You're walking down a charming street when you see a street artist creating something so moving you can't look away—but your phone battery is at 5%.",
+                options: [
+                    {
+                        letter: "A",
+                        text: "Put my phone away and just enjoy the moment.",
+                        scores: { emotional: 1, logical: 1, exploratory: 0 },
+                        next: "end"
+                    },
+                    {
+                        letter: "B",
+                        text: "I'll take one quick photo, then save my battery. I'm sure there's much more to explore.",
+                        scores: { emotional: 0, logical: 1, exploratory: 1 },
+                        next: "end"
+                    },
+                    {
+                        letter: "C",
+                        text: "I'll let my battery die if it means capturing this—I'll manage without a phone.",
+                        scores: { emotional: 1, logical: 0, exploratory: 1 },
+                        next: "end"
+                    }
+                ]
+            }
+        ];
+
+        let currentScenarioIndex = 0;
+        let userPath = [];
+        let scores = {
+            emotional: 0,
+            logical: 0,
+            exploratory: 0
+        };
+
+        function startQuiz() {
+            const userName = document.getElementById('userName').value.trim();
+            if (!userName) {
+                alert('Please enter your name to begin');
+                return;
+            }
+
+            document.getElementById('startSection').style.display = 'none';
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('navigationButtons').style.display = 'flex';
+            
+            showScenario(scenarios[0]);
+            updateProgress();
+        }
+
+        function showScenario(scenario) {
+            const container = document.getElementById('scenarioContainer');
+            container.innerHTML = '';
+
+            const card = document.createElement('div');
+            card.className = 'scenario-card active';
+            
+            card.innerHTML = `
+                <span class="scenario-number">Scenario ${userPath.length + 1}</span>
+                <p class="scenario-text">${scenario.text}</p>
+                <div class="options-container">
+                    ${scenario.options.map((option, index) => `
+                        <div class="option-button" onclick="selectOption(${index})">
+                            <span class="option-letter">${option.letter}</span>
+                            <span class="option-text">${option.text}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            container.appendChild(card);
+            
+            // Update back button visibility
+            document.getElementById('backButton').style.visibility = userPath.length > 0 ? 'visible' : 'hidden';
+            document.getElementById('nextButton').disabled = true;
+        }
+
+        function selectOption(optionIndex) {
+            // Remove previous selection
+            document.querySelectorAll('.option-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Add selection to clicked option
+            document.querySelectorAll('.option-button')[optionIndex].classList.add('selected');
+            
+            // Store the selection
+            const currentScenario = getCurrentScenario();
+            const selectedOption = currentScenario.options[optionIndex];
+            
+            // Store in current path position
+            if (userPath.length === currentScenarioIndex) {
+                userPath.push({
+                    scenarioId: currentScenario.id,
+                    selectedOption: selectedOption
+                });
+            } else {
+                userPath[currentScenarioIndex] = {
+                    scenarioId: currentScenario.id,
+                    selectedOption: selectedOption
+                };
+            }
+            
+            // Enable next button
+            document.getElementById('nextButton').disabled = false;
+        }
+
+        function getCurrentScenario() {
+            if (userPath.length === 0) {
+                return scenarios[0];
+            }
+            
+            const lastSelection = userPath[currentScenarioIndex - 1];
+            if (lastSelection && lastSelection.selectedOption.next !== 'end') {
+                return scenarios.find(s => s.id === lastSelection.selectedOption.next) || scenarios[0];
+            }
+            
+            return scenarios[0];
+        }
+
+        function nextQuestion() {
+            const currentSelection = userPath[currentScenarioIndex];
+            if (!currentSelection) return;
+            
+            if (currentSelection.selectedOption.next === 'end') {
+                showResults();
+                return;
+            }
+            
+            currentScenarioIndex++;
+            const nextScenario = scenarios.find(s => s.id === currentSelection.selectedOption.next);
+            
+            if (nextScenario) {
+                showScenario(nextScenario);
+                updateProgress();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentScenarioIndex > 0) {
+                currentScenarioIndex--;
+                userPath = userPath.slice(0, currentScenarioIndex);
+                
+                if (currentScenarioIndex === 0) {
+                    showScenario(scenarios[0]);
+                } else {
+                    const prevSelection = userPath[currentScenarioIndex - 1];
+                    const scenario = scenarios.find(s => s.id === prevSelection.selectedOption.next);
+                    showScenario(scenario);
+                }
+                
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentScenarioIndex + 1) / 7) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('currentQuestion').textContent = currentScenarioIndex + 1;
+        }
+
+        function calculateScores() {
+            scores = { emotional: 0, logical: 0, exploratory: 0 };
+            
+            userPath.forEach(step => {
+                scores.emotional += step.selectedOption.scores.emotional;
+                scores.logical += step.selectedOption.scores.logical;
+                scores.exploratory += step.selectedOption.scores.exploratory;
+            });
+        }
+
+        function getArchetype() {
+            const maxScore = Math.max(scores.emotional, scores.logical, scores.exploratory);
+            
+            if (scores.emotional === maxScore) {
+                return {
+                    name: "The Heartfelt Companion 💕",
+                    description: "You prioritize emotional connection and togetherness in your travels. Your partner's happiness is your happiness, and you believe the best journeys are the ones you share completely. You're intuitive, empathetic, and create deep bonds through shared experiences."
+                };
+            } else if (scores.logical === maxScore) {
+                return {
+                    name: "The Strategic Navigator 🧭",
+                    description: "You approach travel with careful planning and practical thinking. You excel at making efficient decisions and ensuring everything runs smoothly. Your analytical mind helps you create well-organized adventures that maximize value and minimize stress."
+                };
+            } else {
+                return {
+                    name: "The Spontaneous Explorer 🌟",
+                    description: "You embrace the unexpected and thrive on new experiences. Independence and adventure fuel your spirit, and you see every moment as an opportunity for discovery. You bring excitement and fresh perspectives to your relationship through your adventurous approach."
+                };
+            }
+        }
+
+        function showResults() {
+            calculateScores();
+            const archetype = getArchetype();
+            
+            // Hide quiz elements
+            document.getElementById('scenarioContainer').style.display = 'none';
+            document.getElementById('navigationButtons').style.display = 'none';
+            document.getElementById('progressSection').style.display = 'none';
+            
+            // Show results
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Update scores with animation
+            const maxPossibleScore = userPath.length * 2;
+            
+            setTimeout(() => {
+                document.getElementById('emotionalScore').textContent = scores.emotional;
+                document.getElementById('emotionalBar').style.width = (scores.emotional / maxPossibleScore * 100) + '%';
+                
+                document.getElementById('logicalScore').textContent = scores.logical;
+                document.getElementById('logicalBar').style.width = (scores.logical / maxPossibleScore * 100) + '%';
+                
+                document.getElementById('exploratoryScore').textContent = scores.exploratory;
+                document.getElementById('exploratoryBar').style.width = (scores.exploratory / maxPossibleScore * 100) + '%';
+                
+                document.getElementById('archetypeName').textContent = archetype.name;
+                document.getElementById('archetypeDescription').textContent = archetype.description;
+            }, 300);
+            
+            // Log results for backend integration
+            const userName = document.getElementById('userName').value;
+            const userEmail = document.getElementById('userEmail').value;
+            
+            console.log('Quiz Results:', {
+                user: {
+                    name: userName,
+                    email: userEmail
+                },
+                scores: scores,
+                archetype: archetype.name,
+                path: userPath.map(p => ({
+                    scenario: p.scenarioId,
+                    choice: p.selectedOption.letter
+                }))
+            });
+        }
+    </script>
+</body>
+</html>
+
